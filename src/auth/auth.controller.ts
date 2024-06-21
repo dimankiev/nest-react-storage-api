@@ -8,6 +8,7 @@ export class AuthController {
     ) {}
     @Post('/google/callback')
     async login(@Body('token') token: any, @Body('publicKey') publicKey: any): Promise<any> {
+        // TODO: think of other ways returning JWT
         return this.authService.authorizeWithGoogle(token, publicKey);
     }
 }
