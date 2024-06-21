@@ -7,10 +7,10 @@
 const fs = require('fs');
 const path = require('path');
 
-// Import the compiled generateRSAKeyPair function
-const { generateRSAKeyPair } = require('./compiled/keypair');
-
 async function generateKeys() {
+    // Import the compiled generateRSAKeyPair function
+    const { generateRSAKeyPair } = require('./compiled/rsa-keypair');
+
     try {
         // Generate the key pair
         const { publicKey, privateKey } = await generateRSAKeyPair();

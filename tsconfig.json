@@ -18,8 +18,11 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@app/auth-crypto": [
-        "libs/auth-crypto/src"
+      "@app/auth": [
+        "libs/auth/src"
+      ],
+      "@app/auth/*": [
+        "libs/auth/src/*"
       ],
       "@app/auth-crypto/*": [
         "libs/auth-crypto/src/*"

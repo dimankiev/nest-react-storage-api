@@ -11,7 +11,9 @@
     "^.+\\.(t|j)s$": "ts-jest"
   },
   "moduleNameMapper": {
-    "@app/auth-crypto/(.*)": "<rootDir>/../libs/auth-crypto/src/$1",
-    "@app/auth-crypto": "<rootDir>/../libs/auth-crypto/src"
+    "@app/auth/(.*)": "<rootDir>/../libs/auth/src/$1",
+    "@app/auth": "<rootDir>/../libs/auth/src",
+    "@app/db/(.*)": "<rootDir>/../libs/db/src/$1",
+    "@app/db": "<rootDir>/../libs/db/src"
   }
 }

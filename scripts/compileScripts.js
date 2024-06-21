@@ -3,7 +3,7 @@ const { execSync } = require('child_process');
 const path = require('path');
 
 const filesToCompile = [
-    'libs/auth-crypto/src/utils/keypair.ts'
+    'libs/auth/src/utils/rsa-keypair.ts'
 ];
 
 const compiledDir = path.join(__dirname, 'compiled');

@@ -11,7 +11,7 @@ export interface RSAKeyPair {
 export function generateRSAKeyPair(): Promise<RSAKeyPair>
 {
     return gen('rsa', {
-        modulusLength: 1024,
+        modulusLength: 2048,
         publicKeyEncoding: {
             type: 'spki',
             format: 'pem'

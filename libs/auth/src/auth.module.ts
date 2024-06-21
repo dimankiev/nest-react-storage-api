@@ -5,4 +5,4 @@ import { AuthCryptoService } from './auth-crypto.service';
   providers: [AuthCryptoService],
   exports: [AuthCryptoService],
 })
-export class AuthCryptoModule {}
+export class AuthModule {}
