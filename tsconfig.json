@@ -24,8 +24,11 @@
       "@app/auth/*": [
         "libs/auth/src/*"
       ],
-      "@app/auth-crypto/*": [
-        "libs/auth-crypto/src/*"
+      "@app/db": [
+        "libs/db/src"
+      ],
+      "@app/db/*": [
+        "libs/db/src/*"
       ]
     }
   }

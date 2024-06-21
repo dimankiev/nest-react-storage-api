@@ -1,0 +1,1 @@
+export const DEFAULT_SESSION_TTL: number = 60 * 60; // 1 hour
