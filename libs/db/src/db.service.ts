@@ -23,6 +23,10 @@ export class DbService {
         await this.redisRepo.set('session', sessionId, sessionKey, ttl);
     }
 
+    public async getSession(sessionId: string): Promise<string> {
+        return await this.redisRepo.get('session', sessionId);
+    }
+
     public async revokeSession(sessionId: string): Promise<void> {
         await this.redisRepo.delete('session', sessionId);
     }

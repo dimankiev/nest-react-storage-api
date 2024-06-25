@@ -1,6 +1,7 @@
 import {Inject, Injectable, Scope} from '@nestjs/common';
 import {LoginTicket, OAuth2Client} from "google-auth-library";
 import {AuthSessionService} from "./auth-session.service";
+import {IAuthResponse} from "@app/auth/interfaces/response.interface";
 
 @Injectable({ scope: Scope.DEFAULT })
 export class AuthService {
@@ -21,7 +22,7 @@ export class AuthService {
      * @param publicKey - user's public key
      * @returns signed JWT token
      */
-    public async authorizeWithGoogle(token: string, publicKey: string): Promise<unknown> {
+    public async authorizeWithGoogle(token: string, publicKey: string): Promise<IAuthResponse> {
         const ticket: LoginTicket =
             await this.googleOauth2Client.verifyIdToken({
                 idToken: token,
@@ -40,13 +41,20 @@ export class AuthService {
         const jwtToken = this.sessionSvc.createJwt(session, userId, publicKey);
 
         return {
-            success: true,
             user: {
-                sid: session.id,
                 name: attributes.payload.name,
                 email: attributes.payload.email,
             },
             token: jwtToken
         }
+    }
+
+    /**
+     * Validate a session
+     * @param jwt
+     * @returns User ID
+     */
+    public async validateSession(jwt: string): Promise<string> {
+        return await this.sessionSvc.validate(jwt);
     }
 }

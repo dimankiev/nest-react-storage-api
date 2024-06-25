@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import {deriveECDHSharedSecret, ECDHKeyPair, generateECDHKeyPair} from '../utils/ecdh-keypair';
+import { deriveECDHSharedSecret, ECDHKeyPair, generateECDHKeyPair } from '../utils/ecdh-keypair';
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto';
 import * as jwt from 'jsonwebtoken';
 import { createHash } from 'crypto';
 
 import { DEFAULT_SESSION_TTL } from "../const";
-import {share} from "rxjs";
+import {ITokenDataPayload, ITokenPayload} from "@app/auth/interfaces";
 
 @Injectable()
 export class AuthCryptoService {
@@ -19,11 +19,20 @@ export class AuthCryptoService {
         return createHash(this.hashingAlgorithm).update(input).digest('hex');
     }
 
-    public signJwt(payload: unknown): string {
+    public signJwt(payload: ITokenPayload): string {
         return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: DEFAULT_SESSION_TTL, algorithm: 'RS256' });
     }
 
-    public encryptPayload(payload: unknown, sharedSecret: string): { iv: string, data: string } {
+    public verifyAndDecodeJwt(token: string): string | jwt.JwtPayload {
+        return jwt.verify(token, process.env.JWT_SECRET, { algorithms: ['RS256'] });
+    }
+
+    /**
+     * Encrypts JWT Token Data payload
+     * @param payload
+     * @param sharedSecret
+     */
+    public encryptPayload(payload: ITokenDataPayload, sharedSecret: string): { iv: string, data: string } {
         const iv = randomBytes(16);
 
         const cipher = createCipheriv(
@@ -37,8 +46,18 @@ export class AuthCryptoService {
         return { iv: iv.toString('hex'), data: encrypted };
     }
 
-    public decryptPayload(payload: string, sharedSecret: string, iv: string): unknown {
-        const decipher = createDecipheriv(this.encryptionAlgorithm, sharedSecret, iv);
+    /**
+     * Decrypts JWT Token Data payload
+     * @param payload
+     * @param sharedSecret
+     * @param iv
+     */
+    public decryptPayload(payload: string, sharedSecret: string, iv: string): ITokenDataPayload {
+        const decipher = createDecipheriv(
+            this.encryptionAlgorithm,
+            Buffer.from(sharedSecret, 'hex'),
+            Buffer.from(iv, 'hex')
+        );
         let decrypted = decipher.update(payload, 'hex', 'utf8');
         decrypted += decipher.final('utf8');
         return JSON.parse(decrypted);
