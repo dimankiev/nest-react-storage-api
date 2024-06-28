@@ -29,6 +29,12 @@
       ],
       "@app/db/*": [
         "libs/db/src/*"
+      ],
+      "@app/storage": [
+        "libs/storage/src"
+      ],
+      "@app/storage/*": [
+        "libs/storage/src/*"
       ]
     }
   }

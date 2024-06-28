@@ -9,6 +9,8 @@
 # keys
 /keys
 
+/storage
+
 # Logs
 logs
 *.log

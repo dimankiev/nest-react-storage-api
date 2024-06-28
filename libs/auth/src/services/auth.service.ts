@@ -1,18 +1,19 @@
-import {Inject, Injectable, Scope} from '@nestjs/common';
-import {LoginTicket, OAuth2Client} from "google-auth-library";
-import {AuthSessionService} from "./auth-session.service";
-import {IAuthResponse} from "@app/auth/interfaces/response.interface";
+import { Inject, Injectable, Scope } from '@nestjs/common';
+import { LoginTicket, OAuth2Client } from 'google-auth-library';
+import { AuthSessionService } from './auth-session.service';
+import { IAuthResponse } from '@app/auth/interfaces/response.interface';
 
 @Injectable({ scope: Scope.DEFAULT })
 export class AuthService {
     private readonly googleOauth2Client: OAuth2Client;
 
     constructor(
-        @Inject(AuthSessionService) private readonly sessionSvc: AuthSessionService,
-        ) {
+        @Inject(AuthSessionService)
+        private readonly sessionSvc: AuthSessionService
+    ) {
         this.googleOauth2Client = new OAuth2Client(
             process.env.GOOGLE_CLIENT_ID,
-            process.env.GOOGLE_CLIENT_SECRET,
+            process.env.GOOGLE_CLIENT_SECRET
         );
     }
 
@@ -22,12 +23,16 @@ export class AuthService {
      * @param publicKey - user's public key
      * @returns signed JWT token
      */
-    public async authorizeWithGoogle(token: string, publicKey: string): Promise<IAuthResponse> {
-        const ticket: LoginTicket =
-            await this.googleOauth2Client.verifyIdToken({
+    public async authorizeWithGoogle(
+        token: string,
+        publicKey: string
+    ): Promise<IAuthResponse> {
+        const ticket: LoginTicket = await this.googleOauth2Client.verifyIdToken(
+            {
                 idToken: token,
-                audience: process.env.GOOGLE_CLIENT_ID,
-            });
+                audience: process.env.GOOGLE_CLIENT_ID
+            }
+        );
 
         const attributes = ticket.getAttributes();
         const userId = ticket.getUserId();
@@ -43,10 +48,10 @@ export class AuthService {
         return {
             user: {
                 name: attributes.payload.name,
-                email: attributes.payload.email,
+                email: attributes.payload.email
             },
             token: jwtToken
-        }
+        };
     }
 
     /**
