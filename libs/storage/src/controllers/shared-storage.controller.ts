@@ -65,15 +65,14 @@ export class SharedStorageController {
         @Res({ passthrough: true }) res: Response
     ): Promise<StreamableFile> {
         try {
-            const sharedFileData = await this.storageService.getSharedFileData(
+            const data = await this.storageService.getSharedFileData(
                 userId,
                 fileHash
             );
 
-            const filePath = path.join(
-                sharedFileData.path,
-                sanitize(queryPath)
-            );
+            const filePath = data.isDirectory
+                ? path.join(data.path, sanitize(queryPath))
+                : data.path;
 
             if (!(await fs.pathExists(filePath))) {
                 throw new NotFoundException('File not found');
